@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  alertRules AlertRule[]
+  
+  @@map("users")
+}
+
+model AlertRule {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean   @default(true)
+  conditions  Json      // Stockage des conditions en JSON
+  actions     Json      // Actions à effectuer (email, push, etc.)
+  severity    Severity  @default(MEDIUM)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alerts Alert[]
+
+  @@map("alert_rules")
+}
+
+model Alert {
+  id          String      @id @default(cuid())
+  title       String
+  message     String
+  severity    Severity
+  status      AlertStatus @default(ACTIVE)
+  data        Json?       // Données météo ayant déclenché l'alerte
+  triggeredAt DateTime    @default(now())
+  resolvedAt  DateTime?
+  
+  // Relations
+  ruleId String
+  rule   AlertRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model SpaceWeatherEvent {
+  id          String    @id @default(cuid())
+  eventType   EventType
+  severity    Severity
+  description String
+  startTime   DateTime
+  endTime     DateTime?
+  source      String    // NOAA, ESA, NASA, etc.
+  sourceId    String?   // ID dans la source externe
+  data        Json?     // Données brutes de l'événement
+  createdAt   DateTime  @default(now())
+
+  @@unique([source, sourceId])
+  @@map("space_weather_events")
+}
+
+model DataSource {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  endpoint    String
+  apiKey      String?
+  isActive    Boolean          @default(true)
+  status      DataSourceStatus @default(ACTIVE)
+  lastSync    DateTime?
+  syncInterval Int             @default(900) // en secondes, par défaut 15 min
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("data_sources")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+enum EventType {
+  SOLAR_FLARE
+  GEOMAGNETIC_STORM
+  SOLAR_WIND
+  COSMIC_RAY
+  RADIO_BLACKOUT
+  SOLAR_ENERGETIC_PARTICLE
+}
+
+enum DataSourceStatus {
+  ACTIVE
+  ERROR
+  MAINTENANCE
+}
