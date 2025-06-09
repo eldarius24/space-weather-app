@@ -1,9 +1,9 @@
 'use server';
 import fetch from 'node-fetch';
 import https from 'node:https';
-import logger from '@/lib/logger';
 import { SPACE_TRACK_API_URL } from './constants';
 import { authenticateToSpaceTrack } from './auth';
+import logger from '../../lib/logger';
 
 /**
  * Type qui représente les données d'une general pertubation provenant de space-track.org.
