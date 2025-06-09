@@ -25,6 +25,33 @@ export interface LogEntry {
 }
 
 /**
+ * Couleurs pour la console
+ */
+const ConsoleColors = {
+  Reset: '\x1b[0m',
+  Black: '\x1b[30m',
+  Red: '\x1b[31m',
+  Green: '\x1b[32m',
+  Yellow: '\x1b[33m',
+  Blue: '\x1b[34m',
+  Magenta: '\x1b[35m',
+  Cyan: '\x1b[36m',
+  White: '\x1b[37m',
+  BgRed: '\x1b[41m',
+};
+
+/**
+ * Émoticônes pour chaque niveau de log
+ */
+const LogEmojis = {
+  [LogLevel.DEBUG]: '🐞 ',
+  [LogLevel.INFO]: 'ℹ️ ',
+  [LogLevel.WARN]: '⚠️ ',
+  [LogLevel.ERROR]: '❌ ',
+  [LogLevel.CRITICAL]: '🔥 ',
+};
+
+/**
  * Configuration du logger
  */
 interface LoggerConfig {
@@ -103,8 +130,9 @@ export class Logger {
   private formatLogMessage(level: LogLevel, message: string, context: Record<string, unknown> = {}): string {
     const levelStr = LogLevel[level].padEnd(8);
     const timestamp = new Date().toLocaleString('fr-FR', this.config.dateFormat);
+    const emoji = LogEmojis[level] || '';
     
-    let formattedMessage = `${timestamp} ${levelStr} ${message}`;
+    let formattedMessage = `${timestamp} ${emoji}${levelStr} ${message}`;
     
     if (Object.keys(context).length > 0) {
       const contextStr = JSON.stringify(context, (key, value) => {
@@ -119,7 +147,7 @@ export class Logger {
         return value;
       }, 2);
       
-      formattedMessage += `Contexte: ${contextStr}`;
+      formattedMessage += `\nContexte: ${contextStr}`;
     }
     
     return formattedMessage;
@@ -131,23 +159,53 @@ export class Logger {
   private logToConsole(level: LogLevel, formattedMessage: string): void {
     if (!this.config.enableConsole || level < this.config.minLevel) return;
     
-    // Utiliser différentes méthodes console selon le niveau
+    // Déterminer la couleur en fonction du niveau de log
+    let color = ConsoleColors.Reset;
     switch (level) {
       case LogLevel.DEBUG:
-        console.debug(formattedMessage);
+        color = ConsoleColors.Cyan;
         break;
       case LogLevel.INFO:
-        console.info(formattedMessage);
+        color = ConsoleColors.Green;
         break;
       case LogLevel.WARN:
-        console.warn(formattedMessage);
+        color = ConsoleColors.Yellow;
+        break;
+      case LogLevel.ERROR:
+        color = ConsoleColors.Red;
+        break;
+      case LogLevel.CRITICAL:
+        color = ConsoleColors.BgRed + ConsoleColors.White;
+        break;
+    }
+    
+    // Diviser le message pour appliquer la couleur uniquement à la partie message (pas à la date/heure)
+    const messageParts = formattedMessage.split(' ');
+    // Les 3 premiers éléments sont la date, l'heure et l'emoji+niveau
+    // On garde ces parties sans couleur
+    const prefix = messageParts.slice(0, 3).join(' ');
+    // Le reste est le message qui doit être coloré
+    const messageContent = messageParts.slice(3).join(' ');
+    
+    // Construire le message final avec couleur uniquement sur le contenu
+    const coloredMessage = `${prefix} ${color}${messageContent}${ConsoleColors.Reset}`;
+    
+    switch (level) {
+      case LogLevel.DEBUG:
+        console.debug(coloredMessage);
+        break;
+      case LogLevel.INFO:
+        console.info(coloredMessage);
+        break;
+      case LogLevel.WARN:
+        console.warn(coloredMessage);
         break;
       case LogLevel.ERROR:
       case LogLevel.CRITICAL:
-        console.error(formattedMessage);
+        console.error(coloredMessage);
         break;
       default:
-        console.log(formattedMessage);
+        console.log(coloredMessage);
     }
   }
 
