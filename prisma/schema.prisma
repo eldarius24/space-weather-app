@@ -128,3 +128,27 @@ enum DataSourceStatus {
   ERROR
   MAINTENANCE
 }
+
+model SpaceObject {
+  id             String    @id @default(cuid())
+  noradId        Int       @unique
+  name           String
+  objectType     String
+  countryCode    String
+  launchDate     DateTime?
+  epoch          DateTime?
+  meanMotion     Float?
+  eccentricity   Float?
+  inclination    Float?
+  raOfAscNode    Float?
+  argOfPericenter Float?
+  meanAnomaly    Float?
+  period         Float?
+  apoapsis       Float?
+  periapsis      Float?
+  lastUpdated    DateTime
+  rawData        Json
+  createdAt      DateTime  @default(now())
+
+  @@map("space_objects")
+}
