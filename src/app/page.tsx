@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import {
-  fetchGeneralPerturbations,
   SpaceTrack_GeneralPertubation,
 } from '@/data/space-track/general-pertubation';
+import { getSpaceTrackData } from '@/data/space-track/sync-service';
 
 export default function OrbitalObjectsDashboard() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,22 +14,21 @@ export default function OrbitalObjectsDashboard() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 15;
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const result = await fetchGeneralPerturbations();
-        if (result instanceof Error) {
-          throw result;
-        }
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Extraire loadData en dehors du useEffect pour pouvoir l'utiliser ailleurs
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      // Utiliser getSpaceTrackData qui implémente la mise en cache
+      const result = await getSpaceTrackData();
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -142,8 +141,9 @@ export default function OrbitalObjectsDashboard() {
       <button
         className="floating-action-btn"
         aria-label="Ajouter"
+        onClick={() => loadData()}
       >
-        +
+        ↻
       </button>
     </main>
   );
