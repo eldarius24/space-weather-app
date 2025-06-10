@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stop-color="#a78bfa" stop-opacity="1" />
+            <stop offset="100%" stop-color="#4f46e5" stop-opacity="0" />
+        </radialGradient>
+        <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <!-- Galaxy center glow -->
+        <circle cx="100" cy="100" r="30" fill="url(#centerGlow)" filter="url(#blur)" />
+        
+        <!-- Bright center -->
+        <circle cx="100" cy="100" r="5" fill="#ffffff" />
+        
+        <!-- Stars -->
+        <circle cx="60" cy="75" r="2" fill="#ffffff" />
+        <circle cx="120" cy="65" r="2" fill="#ffffff" />
+        <circle cx="140" cy="110" r="2" fill="#ffffff" />
+        <circle cx="90" cy="140" r="2" fill="#ffffff" />
+        <circle cx="45" cy="120" r="2" fill="#ffffff" />
+        
+        <!-- Main stars of Andromeda -->
+        <circle cx="75" cy="85" r="3" fill="#60a5fa" />
+        <circle cx="130" cy="90" r="3" fill="#60a5fa" />
+        <circle cx="110" cy="130" r="3" fill="#60a5fa" />
+        <circle cx="55" cy="105" r="3" fill="#60a5fa" />
+        
+        <!-- Connecting lines -->
+        <path d="M75,85 L130,90 L110,130 L55,105 L75,85" stroke="#8b5cf6" stroke-width="1" opacity="0.6" />
+        
+        <!-- Orbital rings -->
+        <ellipse cx="100" cy="100" rx="70" ry="50" stroke="#4f46e5" stroke-width="1" opacity="0.3" transform="rotate(30 100 100)" />
+        <ellipse cx="100" cy="100" rx="80" ry="60" stroke="#4f46e5" stroke-width="1" opacity="0.2" transform="rotate(60 100 100)" />
+        <ellipse cx="100" cy="100" rx="90" ry="65" stroke="#4f46e5" stroke-width="1" opacity="0.1" transform="rotate(90 100 100)" />
+    </g>
+</svg>

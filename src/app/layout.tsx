@@ -1,3 +1,4 @@
+import './globals.css';
 export const metadata = {
   title: 'Space Weather App',
   description: 'Application de surveillance de la météo spatiale',

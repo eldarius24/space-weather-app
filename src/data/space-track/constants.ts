@@ -1,7 +1,8 @@
 /**
  * URL de l'API Space-Track
  */
-export const SPACE_TRACK_API_URL = process.env.SPACE_TRACK_API_URL ?? 'https://www.space-track.org';
+export const SPACE_TRACK_API_URL =
+  process.env.SPACE_TRACK_API_URL ?? 'https://www.space-track.org';
 
 /**
  * Clé Redis pour stocker le cookie de session Space-Track

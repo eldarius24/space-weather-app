@@ -35,12 +35,16 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-
 ## Mise en place
+
 Pour mettre en place le projet, vous devez d'abord cloner le dépôt et installer les dépendances. Voici les étapes à suivre :
+
 1. **Cloner le dépôt** :
+
    ```bash
    git clone https://github.com/eldarius24/space-weather-app.git
+
+   ```
 
 2. **Accéder au répertoire du projet** :
    ```bash
@@ -49,20 +53,25 @@ Pour mettre en place le projet, vous devez d'abord cloner le dépôt et installe
 3. **Installer les dépendances** :
    ```bash
    npm install
+   ```
 
 ### Installer Redis (memoire cache)
+
 - sur windows
+
 ```bash
 choco install redis-64
 ```
 
 - sur MAC
+
 ```bash
 brew install redis
 brew services start redis
 ```
 
-- sur linux 
+- sur linux
+
 ```bash
 sudo apt update
 sudo apt install redis-server

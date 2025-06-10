@@ -55,7 +55,7 @@ export const redisClient = {
   async hgetall<T>(key: string): Promise<Record<string, T> | null> {
     const data = await redis.hgetall(key);
     if (!data || Object.keys(data).length === 0) return null;
-    
+
     const result: Record<string, T> = {};
     for (const [field, value] of Object.entries(data)) {
       result[field] = JSON.parse(value);
@@ -65,7 +65,7 @@ export const redisClient = {
 
   // Lists (pour queues, logs)
   async lpush(key: string, ...values: any[]): Promise<number> {
-    const serialized = values.map(v => JSON.stringify(v));
+    const serialized = values.map((v) => JSON.stringify(v));
     return await redis.lpush(key, ...serialized);
   },
 
@@ -126,7 +126,7 @@ export const redisClient = {
 
   async disconnect(): Promise<void> {
     await redis.quit();
-  }
+  },
 };
 
 // Export du client brut si besoin
