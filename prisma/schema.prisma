@@ -152,3 +152,52 @@ model SpaceObject {
 
   @@map("space_objects")
 }
+
+/**
+ * Type qui représente les données d'une general pertubation provenant de space-track.org.
+ * Représente les éléments orbitaux d'un objet spatial.
+ */
+model SpaceTrackGeneralPerturbation {
+  GP_ID                  Int       @id @map("GP_ID") // int(10) unsigned
+  CCSDS_OMM_VERS        String    @db.VarChar(3)
+  COMMENT               String    @db.VarChar(33)
+  CREATION_DATE         DateTime? @db.Timestamp
+  ORIGINATOR            String    @db.VarChar(7)
+  OBJECT_NAME           String?   @db.VarChar(25)
+  OBJECT_ID             String?   @db.VarChar(12)
+  CENTER_NAME           String    @db.VarChar(5)
+  REF_FRAME             String    @db.VarChar(4)
+  TIME_SYSTEM           String    @db.VarChar(3)
+  MEAN_ELEMENT_THEORY   String    @db.VarChar(4)
+  EPOCH                 DateTime? @db.Timestamp
+  MEAN_MOTION           Decimal?  @db.Decimal(13, 8)
+  ECCENTRICITY          Decimal?  @db.Decimal(13, 8)
+  INCLINATION           Decimal?  @db.Decimal(7, 4)
+  RA_OF_ASC_NODE        Decimal?  @db.Decimal(7, 4)
+  ARG_OF_PERICENTER     Decimal?  @db.Decimal(7, 4)
+  MEAN_ANOMALY          Decimal?  @db.Decimal(7, 4)
+  EPHEMERIS_TYPE        Int?      @db.SmallInt
+  CLASSIFICATION_TYPE   String?   @db.Char(1)
+  NORAD_CAT_ID          Int       @db.Integer
+  ELEMENT_SET_NO        Int?      @db.SmallInt
+  REV_AT_EPOCH          Int?      @db.Integer
+  BSTAR                 Decimal?  @db.Decimal(19, 14)
+  MEAN_MOTION_DOT       Decimal?  @db.Decimal(9, 8)
+  MEAN_MOTION_DDOT      Decimal?  @db.Decimal(22, 13)
+  SEMIMAJOR_AXIS        Float?    @db.DoublePrecision
+  PERIOD                Float?    @db.DoublePrecision
+  APOAPSIS              Float?    @db.DoublePrecision
+  PERIAPSIS             Float?    @db.DoublePrecision
+  OBJECT_TYPE           String?   @db.VarChar(12)
+  RCS_SIZE              String?   @db.Char(6)
+  COUNTRY_CODE          String?   @db.Char(6)
+  LAUNCH_DATE           DateTime? @db.Date
+  SITE                  String?   @db.Char(5)
+  DECAY_DATE            DateTime? @db.Date
+  FILE                  BigInt?   @db.BigInt 
+  TLE_LINE0             String?   @db.VarChar(27)
+  TLE_LINE1             String?   @db.VarChar(71)
+  TLE_LINE2             String?   @db.VarChar(71)
+
+  @@map("space_track_general_perturbation")
+}

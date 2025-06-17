@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prisma:generate": "npx prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^6.10.0",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-toast": "^1.2.14",
     "axios": "^1.9.0",
@@ -43,7 +44,7 @@
     "postcss": "^8.4.31",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.12",
-    "prisma": "^6.9.0",
+    "prisma": "^6.10.0",
     "ts-node": "^10.9.2",
     "typescript": "^5"
   },
