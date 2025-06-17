@@ -13,3 +13,12 @@ export const SPACE_TRACK_SESSION_KEY = 'api:space_track:session_cookie';
  * TTL de la session en secondes (2 heures)
  */
 export const SESSION_TTL = 7200;
+
+// Clés Redis pour le cache
+export const SPACE_TRACK_CACHE_KEY = 'space_track:gp:cache';
+export const SPACE_TRACK_LAST_SYNC_KEY = 'space_track:gp:last_sync';
+export const SPACE_TRACK_SYNC_LOCK_KEY = 'space_track:gp:sync_lock';
+
+// Configuration du backoff exponentiel
+export const MAX_RETRY_ATTEMPTS = 5;
+export const INITIAL_RETRY_DELAY = 1000; // 1 seconde

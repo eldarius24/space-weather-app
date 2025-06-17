@@ -1,3 +1,5 @@
+"use server";
+
 import { syncNasaFlares } from '@/data/NASA/nasa-weather';
 import { syncSpaceTrackData } from '@/data/space-track/sync-service';
 import { prisma } from '@/lib/prisma';

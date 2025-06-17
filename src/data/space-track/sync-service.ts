@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import redisClient from '@/lib/redis';
 import logger from '@/lib/logger';
 import { authenticateToSpaceTrack } from './auth';
-import { SPACE_TRACK_API_URL } from './constants';
+import { INITIAL_RETRY_DELAY, MAX_RETRY_ATTEMPTS, SPACE_TRACK_API_URL, SPACE_TRACK_CACHE_KEY, SPACE_TRACK_LAST_SYNC_KEY, SPACE_TRACK_SYNC_LOCK_KEY } from './constants';
 import { SpaceTrack_GeneralPertubation } from './general-pertubation';
 import fetch from 'node-fetch';
 import https from 'node:https';
@@ -14,15 +14,6 @@ import { promisify } from 'node:util';
 // Promisify zlib functions
 const gzipAsync = promisify(gzip);
 const unzipAsync = promisify(unzip);
-
-// Clés Redis pour le cache
-const SPACE_TRACK_CACHE_KEY = 'space_track:gp:cache';
-const SPACE_TRACK_LAST_SYNC_KEY = 'space_track:gp:last_sync';
-const SPACE_TRACK_SYNC_LOCK_KEY = 'space_track:gp:sync_lock';
-
-// Configuration du backoff exponentiel
-const MAX_RETRY_ATTEMPTS = 5;
-const INITIAL_RETRY_DELAY = 1000; // 1 seconde
 
 /**
  * Vérifie si une synchronisation est déjà en cours
@@ -108,9 +99,8 @@ const cacheData = async (
     const compressedData = await gzipAsync(Buffer.from(jsonData));
     
     // S'assurer que compressedData est bien un Buffer avant de le stocker
-    if (!Buffer.isBuffer(compressedData)) {
+    if (!Buffer.isBuffer(compressedData))
       throw new Error('Les données compressées ne sont pas un Buffer valide');
-    }
     
     await redisClient.set(SPACE_TRACK_CACHE_KEY, compressedData, ttl);
     logger.info('Données mises en cache avec succès', {
@@ -254,20 +244,20 @@ const processAndStoreData = async (data: SpaceTrack_GeneralPertubation[]): Promi
           // Préparer les données pour l'insertion/mise à jour
           const objectData = {
             noradId: item.NORAD_CAT_ID,
-            name: item.OBJECT_NAME || `Unknown-${item.NORAD_CAT_ID}`,
-            objectType: item.OBJECT_TYPE || 'UNKNOWN',
-            countryCode: item.COUNTRY_CODE || 'UNK',
-            launchDate: item.LAUNCH_DATE || null,
-            epoch: item.EPOCH || null,
-            meanMotion: item.MEAN_MOTION || null,
-            eccentricity: item.ECCENTRICITY || null,
-            inclination: item.INCLINATION || null,
-            raOfAscNode: item.RA_OF_ASC_NODE || null,
-            argOfPericenter: item.ARG_OF_PERICENTER || null,
-            meanAnomaly: item.MEAN_ANOMALY || null,
-            period: item.PERIOD || null,
-            apoapsis: item.APOAPSIS || null,
-            periapsis: item.PERIAPSIS || null,
+            name: item.OBJECT_NAME ?? `Unknown-${item.NORAD_CAT_ID}`,
+            objectType: item.OBJECT_TYPE ?? 'UNKNOWN',
+            countryCode: item.COUNTRY_CODE ?? 'UNK',
+            launchDate: item.LAUNCH_DATE ?? null,
+            epoch: item.EPOCH ?? null,
+            meanMotion: item.MEAN_MOTION ?? null,
+            eccentricity: item.ECCENTRICITY ?? null,
+            inclination: item.INCLINATION ?? null,
+            raOfAscNode: item.RA_OF_ASC_NODE ?? null,
+            argOfPericenter: item.ARG_OF_PERICENTER ?? null,
+            meanAnomaly: item.MEAN_ANOMALY ?? null,
+            period: item.PERIOD ?? null,
+            apoapsis: item.APOAPSIS ?? null,
+            periapsis: item.PERIAPSIS ?? null,
             lastUpdated: new Date(),
             rawData: item as unknown as Record<string, unknown>,
           };
@@ -315,13 +305,13 @@ const processAndStoreData = async (data: SpaceTrack_GeneralPertubation[]): Promi
               )
             `;
             
-            logger.info(`Nouvel objet orbital détecté: ${item.OBJECT_NAME || item.NORAD_CAT_ID}`);
+            logger.info(`Nouvel objet orbital détecté: ${item.OBJECT_NAME ?? item.NORAD_CAT_ID}`);
             // Ici, on pourrait implémenter une logique de notification
           }
         } catch (error) {
           logger.error(`Erreur lors du traitement de l'objet ${item.NORAD_CAT_ID}`, {
             error: error instanceof Error ? error.message : String(error),
-            object: item.OBJECT_NAME || item.NORAD_CAT_ID,
+            object: item.OBJECT_NAME ?? item.NORAD_CAT_ID,
           });
         }
       })
@@ -414,7 +404,7 @@ export const syncSpaceTrackData = async (
     }
     
     // Traiter et stocker les données
-    await processAndStoreData(data);
+    //await processAndStoreData(data);
     
     // Mettre en cache les données
     await cacheData(data);

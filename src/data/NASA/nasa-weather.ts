@@ -1,12 +1,12 @@
 'use server';
 
+import { EventType, Severity } from '@/generated/prisma';
 import { prisma } from '@/lib/prisma';
-import { EventType, Severity } from '@prisma/client';
 import { subDays } from 'date-fns';
 
 // URL de l'API DONKI (Database of Notifications, Knowledge, Information) de la NASA
 const NASA_API_URL = 'https://api.nasa.gov/DONKI/FLR';
-const API_KEY = process.env.NASA_API_KEY || 'DEMO_KEY';
+const API_KEY = process.env.NASA_API_KEY ?? 'DEMO_KEY';
 
 /**
  * Interface décrivant la structure d'un événement de type "Solar Flare" (FLR)
@@ -46,7 +46,7 @@ const normalizeEvent = (event: NasaDonkiFlareEvent) => {
     endTime: event.endTime ? new Date(event.endTime) : null,
     source: 'NASA',
     sourceId: event.flrID,
-    data: event, // Stockage des données brutes pour référence
+    data: JSON.stringify(event), // Stockage des données brutes pour référence
   };
 };
 
@@ -85,14 +85,13 @@ export const syncNasaFlares = async () => {
             sourceId: normalized.sourceId,
           },
         },
-        update: normalized,
         create: normalized,
+        update: normalized,
       });
     }
 
     console.log(`Successfully synced ${events.length} events from NASA.`);
   } catch (error) {
     console.error('Error syncing data from NASA:', error);
-    // Idéalement, utiliser un logger plus robuste ici (comme celui dans src/lib/logger.ts)
   }
 };
