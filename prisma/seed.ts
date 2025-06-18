@@ -11,13 +11,28 @@ async function main() {
     update: {},
     create: {
       name: 'NASA',
-      endpoint: 'https://api.nasa.gov/DONKI/FLR',
+      endpoint: 'https://api.nasa.gov',
       apiKey: process.env.NASA_API_KEY || 'DEMO_KEY',
       isActive: true,
     },
   });
 
   console.log(`Created or found data source: ${nasaSource.name}`);
+
+  //Création de la source de données space track si elle n'existe pas
+  const spaceTrackSource = await prisma.dataSource.upsert({
+    where: { name: 'SPACE-TRACK' },
+    update: {},
+    create: {
+      name: 'SPACE-TRACK',
+      endpoint: 'https://www.space-track.org',
+      userName: process.env.SPACE_TRACK_USERNAME,
+      password: process.env.SPACE_TRACK_PASSWORD,
+      isActive: true,
+    },
+  });
+
+  console.log(`Created or found data source: ${spaceTrackSource.name}`);
 
   console.log('Seeding finished.');
 }

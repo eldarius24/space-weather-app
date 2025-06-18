@@ -85,6 +85,8 @@ model DataSource {
   name        String           @unique
   endpoint    String
   apiKey      String?
+  userName    String?
+  password    String?
   isActive    Boolean          @default(true)
   status      DataSourceStatus @default(ACTIVE)
   lastSync    DateTime?
