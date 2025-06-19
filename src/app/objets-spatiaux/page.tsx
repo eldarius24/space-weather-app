@@ -1,10 +1,10 @@
-import { fetchGeneralPerturbations } from '@/data/space-track/general-pertubation';
 import { SpaceTrackGeneralPerturbation } from '@/generated/prisma';
 import { GeneralPertubationCard } from '@/components/general-pertubation-card';
+import { getSyncGeneralPerturbationsOrGetFromApi } from '@/data/space-track/synchro';
 
 export default async function Home() {
   
-  const getSpaceObjects = await fetchGeneralPerturbations();
+  const getSpaceObjects = await getSyncGeneralPerturbationsOrGetFromApi();
 
   if (getSpaceObjects instanceof Error) {
     return (

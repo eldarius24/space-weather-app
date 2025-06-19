@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SpaceTrackGeneralPerturbation } from '@/generated/prisma';
+import logger from '@/lib/logger';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -8,7 +9,7 @@ interface GeneralPertubationCardProps {
 }
 
 export function GeneralPertubationCard({ spaceObject }: Readonly<GeneralPertubationCardProps>) {
-  const { OBJECT_NAME, NORAD_CAT_ID, OBJECT_TYPE, COUNTRY_CODE, LAUNCH_DATE } =
+  const { OBJECT_NAME, NORAD_CAT_ID, OBJECT_TYPE, COUNTRY_CODE, EPOCH } =
     spaceObject;
 
   return (
@@ -26,11 +27,12 @@ export function GeneralPertubationCard({ spaceObject }: Readonly<GeneralPertubat
         <p>
           <strong>Pays:</strong> {COUNTRY_CODE}
         </p>
-        {LAUNCH_DATE && (
-          <p>
-            <strong>Date de lancement:</strong>{' '}
-            {format(new Date(LAUNCH_DATE), 'd MMMM yyyy', { locale: fr })}
-          </p>
+        {EPOCH && (
+          <div className="absolute bottom-2 right-2">
+            <span className="text-xs text-muted-foreground/60 font-mono">
+              {format(new Date(EPOCH), 'dd/MM/yy HH:mm', { locale: fr })}
+            </span>
+          </div>
         )}
       </CardContent>
     </Card>

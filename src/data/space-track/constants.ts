@@ -22,3 +22,7 @@ export const SPACE_TRACK_SYNC_LOCK_KEY = 'space_track:gp:sync_lock';
 // Configuration du backoff exponentiel
 export const MAX_RETRY_ATTEMPTS = 5;
 export const INITIAL_RETRY_DELAY = 1000; // 1 seconde
+
+// Clés Redis pour le cache des general perturbations
+export const SPACE_TRACK_GP_CACHE_KEY = 'space-track:general-perturbations';
+export const SPACE_TRACK_GP_CACHE_TTL = 3600; // 1 heure en secondes
