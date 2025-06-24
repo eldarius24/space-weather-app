@@ -20,7 +20,12 @@ export async function getSpaceObjects() {
 
 export async function updateSpaceObject(
   id: string,
-  data: Partial<Omit<SpaceObject, 'id' | 'noradId' | 'rawData' | 'createdAt' | 'lastUpdated'>>
+  data: Partial<
+    Omit<
+      SpaceObject,
+      'id' | 'noradId' | 'rawData' | 'createdAt' | 'lastUpdated'
+    >
+  >,
 ) {
   try {
     const updatedSpaceObject = await prisma.spaceObject.update({

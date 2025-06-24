@@ -1,7 +1,7 @@
 'use server';
-import redisClient from "@/lib/redis";
-import { SPACE_TRACK_API_URL, SPACE_TRACK_SESSION_KEY } from "./constants";
-import logger from "@/lib/logger";
+import redisClient from '@/lib/redis';
+import { SPACE_TRACK_API_URL, SPACE_TRACK_SESSION_KEY } from './constants';
+import logger from '@/lib/logger';
 
 /**
  * Déconnexion de l'API Space-Track et suppression de la session Redis
@@ -25,7 +25,7 @@ export const logoutFromSpaceTrack = async (): Promise<void> => {
       method: 'GET',
       headers: {
         Cookie: spaceTrackSessionCookie,
-      }
+      },
     });
 
     // Supprimer la session de Redis

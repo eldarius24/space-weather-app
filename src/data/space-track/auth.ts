@@ -23,8 +23,7 @@ const extractCookies = (setCookieHeaders: string[] | null): string => {
   setCookieHeaders.forEach((header) => {
     // Extraire la partie NAME=VALUE du cookie
     const cookiePart = header.split(';')[0];
-    if (cookiePart) 
-      cookies.push(cookiePart.trim());
+    if (cookiePart) cookies.push(cookiePart.trim());
   });
 
   logger.debug(`Cookies extraits: ${cookies.length}`);
@@ -132,5 +131,3 @@ export const authenticateToSpaceTrack = async (): Promise<string> => {
     );
   }
 };
-
-

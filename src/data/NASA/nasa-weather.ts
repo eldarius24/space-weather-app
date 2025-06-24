@@ -73,7 +73,9 @@ export const syncNasaFlares = async () => {
       return;
     }
 
-    console.log(`Found ${events.length} events from NASA. Normalizing and saving...`);
+    console.log(
+      `Found ${events.length} events from NASA. Normalizing and saving...`,
+    );
 
     for (const event of events) {
       const normalized = normalizeEvent(event);

@@ -14,7 +14,10 @@ interface WeatherEventCardProps {
   event: SpaceWeatherEvent;
 }
 
-const severityMap: Record<Severity, { label: string; variant: 'default' | 'warning' | 'destructive' }> = {
+const severityMap: Record<
+  Severity,
+  { label: string; variant: 'default' | 'warning' | 'destructive' }
+> = {
   LOW: { label: 'Faible', variant: 'default' },
   MEDIUM: { label: 'Modérée', variant: 'warning' },
   HIGH: { label: 'Élevée', variant: 'destructive' },

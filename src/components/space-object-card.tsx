@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { SpaceObject } from '@/generated/prisma';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -7,7 +13,9 @@ interface SpaceObjectCardProps {
   spaceObject: SpaceObject;
 }
 
-export function SpaceObjectCard({ spaceObject }: Readonly<SpaceObjectCardProps>) {
+export function SpaceObjectCard({
+  spaceObject,
+}: Readonly<SpaceObjectCardProps>) {
   const { name, noradId, objectType, countryCode, launchDate } = spaceObject;
 
   return (
@@ -19,8 +27,12 @@ export function SpaceObjectCard({ spaceObject }: Readonly<SpaceObjectCardProps>)
         <CardDescription>NORAD ID: {noradId}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p><strong>Type:</strong> {objectType}</p>
-        <p><strong>Pays:</strong> {countryCode}</p>
+        <p>
+          <strong>Type:</strong> {objectType}
+        </p>
+        <p>
+          <strong>Pays:</strong> {countryCode}
+        </p>
         {launchDate && (
           <p>
             <strong>Date de lancement:</strong>{' '}
