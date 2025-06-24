@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SpaceTrackGeneralPerturbation } from '@/generated/prisma';
-import logger from '@/lib/logger';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
