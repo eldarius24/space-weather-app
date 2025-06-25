@@ -1,16 +1,31 @@
+"use client";
+import useSWR from 'swr';
+import {Spinner} from "@heroui/spinner";
 import { SpaceTrackGeneralPerturbation } from '@/generated/prisma';
 import { GeneralPertubationCard } from '@/components/general-pertubation-card';
 import { getSyncGeneralPerturbationsOrGetFromApi } from '@/data/space-track/synchro';
 
-export default async function Home() {
-  const getSpaceObjects = await getSyncGeneralPerturbationsOrGetFromApi();
+export default function Home() {
+  const { data: spaceObjects, error, isLoading } = useSWR<SpaceTrackGeneralPerturbation[]>(
+    'space-objects',
+    getSyncGeneralPerturbationsOrGetFromApi
+  );
 
-  if (getSpaceObjects instanceof Error) {
+  if (isLoading) {
+    return (
+      <main className="container mx-auto p-4">
+        <h1 className="mb-4 text-2xl font-bold">Space Weather Dashboard</h1>
+        <Spinner />
+      </main>
+    );
+  }
+
+  if (error) {
     return (
       <main className="container mx-auto p-4">
         <h1 className="mb-4 text-2xl font-bold">Space Weather Dashboard</h1>
         <p className="text-red-500">
-          Erreur lors de la récupération des données : {getSpaceObjects.message}
+          Erreur lors de la récupération des données : {error.message}
         </p>
       </main>
     );
@@ -19,7 +34,7 @@ export default async function Home() {
   return (
     <main className="container mx-auto p-4">
       <h1 className="mb-4 text-2xl font-bold">Space Weather Dashboard</h1>
-      {getSpaceObjects.map((gp: SpaceTrackGeneralPerturbation) => {
+      {spaceObjects?.map((gp: SpaceTrackGeneralPerturbation) => {
         return (
           <GeneralPertubationCard key={gp.NORAD_CAT_ID} spaceObject={gp} />
         );

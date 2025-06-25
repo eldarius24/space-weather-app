@@ -1,3 +1,4 @@
+"use server";
 import { SpaceTrackGeneralPerturbation } from '@/generated/prisma';
 import logger from '@/lib/logger';
 import redisClient from '@/lib/redis';
@@ -67,38 +68,5 @@ export const getSyncGeneralPerturbationsOrGetFromApi = async (
     throw new Error(
       `Échec de synchronisation Redis: ${error instanceof Error ? error.message : 'Erreur inconnue'}`,
     );
-  }
-};
-
-/**
- * Invalide le cache Redis des données orbitales
- * @returns {Promise<boolean>} True si le cache a été invalidé avec succès
- */
-export const invalidateGeneralPerturbationsCache =
-  async (): Promise<boolean> => {
-    try {
-      await redisClient.del(SPACE_TRACK_GP_CACHE_KEY);
-      logger.info('Cache Redis invalidé');
-      return true;
-    } catch (error) {
-      logger.error("Erreur lors de l'invalidation du cache Redis", {
-        errorMessage: error instanceof Error ? error.message : String(error),
-      });
-      return false;
-    }
-  };
-
-/**
- * Vérifie si les données sont en cache et retourne le TTL restant
- * @returns {Promise<number>} TTL en secondes (-1 si pas d'expiration, -2 si la clé n'existe pas)
- */
-export const getGeneralPerturbationsCacheTTL = async (): Promise<number> => {
-  try {
-    return await redisClient.ttl(SPACE_TRACK_GP_CACHE_KEY);
-  } catch (error) {
-    logger.error('Erreur lors de la vérification du TTL du cache', {
-      errorMessage: error instanceof Error ? error.message : String(error),
-    });
-    return -2;
   }
 };
