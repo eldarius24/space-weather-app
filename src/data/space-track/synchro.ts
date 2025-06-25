@@ -30,6 +30,7 @@ export const getSyncGeneralPerturbationsOrGetFromApi = async (
         });
         return cachedData;
       }
+      logger.info('Aucune donnée en cache, récupération depuis l\'API Space-Track');
     }
 
     // Récupérer les données depuis l'API Space-Track

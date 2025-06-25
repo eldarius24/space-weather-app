@@ -8,7 +8,7 @@ import { getSyncGeneralPerturbationsOrGetFromApi } from '@/data/space-track/sync
 export default function Home() {
   const { data: spaceObjects, error, isLoading } = useSWR<SpaceTrackGeneralPerturbation[]>(
     'space-objects',
-    getSyncGeneralPerturbationsOrGetFromApi
+    () => getSyncGeneralPerturbationsOrGetFromApi(false)
   );
 
   if (isLoading) {
