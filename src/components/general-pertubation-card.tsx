@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -5,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { SpaceTrackGeneralPerturbation } from '@/generated/prisma';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -18,12 +23,70 @@ export function GeneralPertubationCard({
 }: Readonly<GeneralPertubationCardProps>) {
   const { OBJECT_NAME, NORAD_CAT_ID, OBJECT_TYPE, COUNTRY_CODE, EPOCH } =
     spaceObject;
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(OBJECT_NAME || "");
+
+  const handleTitleClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleTitleSave = () => {
+    // Utiliser uniquement l'état local pour la modification du titre
+    // sans essayer de persister les changements dans la base de données
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleTitleSave();
+    } else if (e.key === 'Escape') {
+      setTitle(OBJECT_NAME || "");
+      setIsEditing(false);
+    }
+  };
+
+  const handleDelete = () => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet objet spatial ?')) {
+      const card = document.getElementById(`card-${NORAD_CAT_ID}`);
+      if (card) {
+        card.style.display = 'none';
+      }
+    }
+  };
 
   return (
-    <Card>
+    <Card className="mb-4" id={`card-${NORAD_CAT_ID}`}>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>{OBJECT_NAME}</CardTitle>
+          {isEditing ? (
+            <div className="flex-1 mr-2">
+              <Input
+                value={title}
+                onChange={handleTitleChange}
+                onBlur={handleTitleSave}
+                onKeyDown={handleKeyDown}
+                autoFocus
+                className="text-black bg-white"
+              />
+            </div>
+          ) : (
+            <CardTitle onClick={handleTitleClick} className="cursor-pointer hover:text-blue-500">
+              {title}
+            </CardTitle>
+          )}
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDelete}
+            className="ml-2"
+          >
+            Supprimer
+          </Button>
         </div>
         <CardDescription>NORAD ID: {NORAD_CAT_ID}</CardDescription>
       </CardHeader>
